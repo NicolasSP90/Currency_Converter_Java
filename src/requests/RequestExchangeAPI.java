@@ -20,7 +20,6 @@ public class RequestExchangeAPI {
             HttpResponse<String> response;
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return new Gson().fromJson(response.body(), ExchangeData.class);
-
         } catch (Exception e){
             System.out.println("Erro ao objter dados da API: " + e.getMessage());
             return null;
@@ -38,17 +37,9 @@ public class RequestExchangeAPI {
     // Câmbio e conversão de valor
     public String getExchangeAmount(String entrySymbol, String returnSymbol, double amount) {
         String apiKey = getApiKey();
-        String url = "https://v6.exchangerate-api.com/v6/%s/pair/%s/%s/%f".formatted(apiKey, entrySymbol, returnSymbol, amount);
+        String url = "https://v6.exchangerate-api.com/v6/%s/pair/%s/%s/%.2f".formatted(apiKey, entrySymbol, returnSymbol, amount);
         ExchangeData resposta = getRequest(url);
-        return resposta.conversion_rate();
-    }
-
-    // Lista de Câmbio da moeda de referência
-    public String getExchangeReference(String entrySymbol) {
-        String apiKey = getApiKey();
-        String url = "https://v6.exchangerate-api.com/v6/%s/latest/%s".formatted(apiKey, entrySymbol);
-        ExchangeData resposta = getRequest(url);
-        return resposta.conversion_rate();
+        return resposta.conversion_result();
     }
 
     // Carregando API Key do .env
